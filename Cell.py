@@ -12,12 +12,14 @@ class Cell:
 
     '''
     def __init__(self, i, j, width, fill_color, border_color, border_width=1):
-        self.i              = i
-        self.j              = j
+        self.i              = i # x pixel
+        self.j              = j # y pixel
         self.width          = width
         self.fill_color     = fill_color
         self.border_color   = border_color
         self.border_width   = border_width
+        self.row_index      = j//width
+        self.col_index      = i//width
 
         self.visited = False
         
@@ -86,3 +88,24 @@ class Cell:
                 Neighbors.append(top_neighbor)
         return Neighbors
 
+    def remove_wall_between(self,next_cell):
+        # next cell to the right
+        if next_cell.col_index-self.col_index>=1:
+            print('moving right')
+            self.right_border = False
+            next_cell.left_border = False
+        
+        # if next cell is to the left
+        if next_cell.col_index-self.col_index<=-1:
+            self.left_border = False
+            next_cell.right_border = False
+
+        # if next cell is to top
+        if next_cell.row_index - self.row_index <= -1:
+            self.top_boder = False
+            next_cell.bottom_border = False
+        
+        # if next cell is to bottom
+        if next_cell.row_index-self.row_index>=1:
+            self.bottom_border = False
+            next_cell.top_boder =False

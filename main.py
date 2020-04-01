@@ -48,17 +48,20 @@ next_cell = None
 
 def FindNextCell() -> Cell:
     global current_cell, next_cell
-    i = current_cell.i//cell_width # i -> cols
-    j = current_cell.j//cell_width # j -> rows
+    row = current_cell.row_index # i -> cols
+    col = current_cell.col_index # j -> rows
 
     # get all neighbors of current cell
-    Neighbors =  current_cell.neighbors(all_cells, j, i)
+    Neighbors =  current_cell.neighbors(all_cells, row, col)
 
     # choose random neighbor        
     if len(Neighbors):
         random_neighbor = random.choice(Neighbors)
         next_cell = random_neighbor
     
+        # removing wall
+        current_cell.remove_wall_between(next_cell)
+
         # modifying cell status
         current_cell.visited = True
         current_cell.fill_color = colors.OrangeRed
