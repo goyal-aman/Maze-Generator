@@ -37,6 +37,8 @@ for j in range(rows):
 
 # stack
 stack = []
+max_stack_len = 0
+final_cell = None
 
 # Current Cell
 
@@ -46,18 +48,24 @@ visited cell -> OrangeRed
 unvisited cell -> black
 '''
 
-current_cell = all_cells[1][4]
+startX = random.randint(0, cols-1)
+startY = random.randint(0, rows-1)
+
+current_cell = all_cells[startX][startY]
 current_cell.visited = True
 current_cell.fill_color = colors.Purple
 stack.append(current_cell)
 next_cell = None
 
 def FindNextCell() -> Cell:
-    global stack, current_cell
+    global stack, current_cell, max_stack_len, startX, startY, final_cell
 
     # current_cell from prev cycle, making it orange
     current_cell.fill_color = colors.OrangeRed
 
+    if len(stack)>max_stack_len:
+        max_stack_len = len(stack)
+        final_cell = current_cell
     if len(stack)>0:
         current_cell = stack.pop()
         current_cell.fill_color = colors.Purple
@@ -84,6 +92,11 @@ def FindNextCell() -> Cell:
             next_cell.visited = True
             stack.append(next_cell)
     
+    elif len(stack)==0:
+        home_cell = all_cells[startX][startY]
+        home_cell.fill_color = colors.LimeGreen
+        final_cell.fill_color = colors.Red
+    
 
 
 run = True
@@ -99,7 +112,7 @@ while run:
             all_cells[i][j].show(win)
             # if all_cells[i][j].fill_color == colors.Purple:
                 # print(i,j)
-    pygame.time.wait(30)
+    pygame.time.wait(90)
     FindNextCell()
 
     pygame.display.update()
