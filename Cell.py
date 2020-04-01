@@ -91,7 +91,6 @@ class Cell:
     def remove_wall_between(self,next_cell):
         # next cell to the right
         if next_cell.col_index-self.col_index>=1:
-            print('moving right')
             self.right_border = False
             next_cell.left_border = False
         

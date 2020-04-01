@@ -11,7 +11,7 @@ win = pygame.display.set_mode((win_width, win_height))
 
 
 # grid
-cell_width = 70
+cell_width = 50
 cols = win_width//cell_width
 rows = win_height//cell_width
 cell_border_width = 1
@@ -35,39 +35,55 @@ for j in range(rows):
     all_cells.append(col)
 
 
+# stack
+stack = []
+
 # Current Cell
+
 '''
 active cell -> purple color
 visited cell -> OrangeRed
 unvisited cell -> black
 '''
+
 current_cell = all_cells[1][4]
 current_cell.visited = True
 current_cell.fill_color = colors.Purple
+stack.append(current_cell)
 next_cell = None
 
 def FindNextCell() -> Cell:
-    global current_cell, next_cell
-    row = current_cell.row_index # i -> cols
-    col = current_cell.col_index # j -> rows
+    global stack, current_cell
 
-    # get all neighbors of current cell
-    Neighbors =  current_cell.neighbors(all_cells, row, col)
+    # current_cell from prev cycle, making it orange
+    current_cell.fill_color = colors.OrangeRed
 
-    # choose random neighbor        
-    if len(Neighbors):
-        random_neighbor = random.choice(Neighbors)
-        next_cell = random_neighbor
-    
-        # removing wall
-        current_cell.remove_wall_between(next_cell)
-
-        # modifying cell status
-        current_cell.visited = True
-        current_cell.fill_color = colors.OrangeRed
-
-        current_cell = next_cell
+    if len(stack)>0:
+        current_cell = stack.pop()
         current_cell.fill_color = colors.Purple
+
+        row = current_cell.row_index # i -> cols
+        col = current_cell.col_index # j -> rows
+        
+        # get neighbors of current cell
+        Neighbors = current_cell.neighbors(all_cells, row, col)
+
+        if len(Neighbors)>0:
+            stack.append(current_cell)
+
+             # choosing random neighbor
+            next_cell = random.choice(Neighbors)
+
+            # remove wall 
+            current_cell.remove_wall_between(next_cell)
+
+            #modifying cell status
+            current_cell.fill_color = colors.OrangeRed
+            next_cell.fill_color = colors.Purple
+
+            next_cell.visited = True
+            stack.append(next_cell)
+    
 
 
 run = True
@@ -83,7 +99,7 @@ while run:
             all_cells[i][j].show(win)
             # if all_cells[i][j].fill_color == colors.Purple:
                 # print(i,j)
-    pygame.time.wait(300)
+    pygame.time.wait(30)
     FindNextCell()
 
     pygame.display.update()
