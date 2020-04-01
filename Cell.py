@@ -2,32 +2,46 @@ import pygame
 
 class Cell:
     '''
-    @param:
-    i -> row
-    j -> col
-    '''
-    def __init__(self, i:int, j:int, width:int, fill_color=None, border_color=None):
-        self.i            = i
-        self.j            = j
-        self.width        = width
-        self.fill_color   = fill_color
-        self.border_color = border_color 
-        self.top_line     = [(i, j), (i+width, j)]
-        self.right_line   = [(i+width, j),( i+width, j+width)]
-        self.bottom_line  = [(i+width, j+width), (i, j+width)]
-        self.left_line    = [(i, j+width),(i, j)]
 
-    
-    def show(self, screen):
-        ''' 
-        drawing react and then rendering lines to show border
-        '''
-        # rect
-        pygame.draw.rect(screen, self.fill_color, (self.i, self.j, self.width, self.width) )
+    A()         B()
+
+
+    D()         C()
+
+    '''
+    def __init__(self, i, j, width, fill_color, border_color, border_width=1):
+        self.i              = i
+        self.j              = j
+        self.width          = width
+        self.fill_color     = fill_color
+        self.border_color   = border_color
+        self.border_width   = border_width
         
-        # border lines
-        pygame.draw.line(screen, self.border_color, self.top_line[0], self.top_line[1], 2)
-        pygame.draw.line(screen, self.border_color, self.bottom_line[0], self.bottom_line[1] )
-        pygame.draw.line(screen, self.border_color, self.left_line[0], self.left_line[1] )
-        pygame.draw.line(screen, self.border_color, self.right_line[0], self.right_line[1] )
-    
+        # Cell Coords
+        self.A              = (i,       j)
+        self.B              = (i+width-border_width, j)
+        self.C              = (i+width-border_width, j+width-border_width)
+        self.D              = (i,       j+width-border_width)
+
+        # Cell Border
+        self.top_boder      = True
+        self.bottom_border  =  True
+        self.left_border    = True
+        self.right_border   = True
+
+
+    def show(self, screen):
+
+        # Rect
+        pygame.draw.rect(screen, self.fill_color, (self.i, self.j, self.width, self.width))
+
+        # border
+        if self.top_boder:
+            pygame.draw.line(screen, self.border_color, self.A, self.B, 2) # topline
+        if self.right_border:
+            pygame.draw.line(screen, self.border_color, self.B, self.C, 2) # right line
+        if self.bottom_border:
+            pygame.draw.line(screen, self.border_color, self.C, self.D, 2) # bottom line
+        if self.left_border:
+            pygame.draw.line(screen, self.border_color, self.D, self.A, 2) # leftline
+
