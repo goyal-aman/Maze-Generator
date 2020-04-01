@@ -1,4 +1,6 @@
 import pygame
+import colors
+from typing import List
 
 class Cell:
     '''
@@ -16,6 +18,8 @@ class Cell:
         self.fill_color     = fill_color
         self.border_color   = border_color
         self.border_width   = border_width
+
+        self.visited = False
         
         # Cell Coords
         self.A              = (i,       j)
@@ -44,4 +48,41 @@ class Cell:
             pygame.draw.line(screen, self.border_color, self.C, self.D, 2) # bottom line
         if self.left_border:
             pygame.draw.line(screen, self.border_color, self.D, self.A, 2) # leftline
+
+    def neighbors(self,grid:List[List], row_index:int, col_index:int) -> List:
+        '''
+        @param:
+        -grid -> grid of all the cells
+        -row_index, col_index -> row, col index of current cell
+        
+        @algorithm:
+        -> find left, right, top, bottom neighbor of current cell
+        -> for each neighbor, if they have not visited, add them to Neighbors List
+
+        @return : Neighbors (list)
+        '''
+        Neighbors = []
+        rows = len(grid)
+        cols = len(grid[0])
+        
+        if col_index-1>=0: # left neighbor
+            left_neighbor = grid[row_index][col_index-1]
+            if left_neighbor.visited==False:
+                Neighbors.append(left_neighbor)
+    
+        if col_index+1<cols:
+            right_neighbor = grid[row_index][col_index+1]
+            if right_neighbor.visited == False:
+                Neighbors.append(right_neighbor)
+        
+        if row_index+1<rows: # bottom_neighbor
+            bottom_neighbor = grid[row_index+1][col_index]
+            if bottom_neighbor.visited == False:
+                Neighbors.append(bottom_neighbor)
+        
+        if row_index-1>=0: # top neighbor
+            top_neighbor = grid[row_index-1][col_index] 
+            if top_neighbor.visited == False:
+                Neighbors.append(top_neighbor)
+        return Neighbors
 

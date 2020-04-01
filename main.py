@@ -5,13 +5,13 @@ import colors
 pygame.init()
 
 # window variables, +1 for bottom and right border
-win_width   = 500+1     
-win_height  = 500+1
+win_width   = 700+1     
+win_height  = 700+1
 win = pygame.display.set_mode((win_width, win_height))
 
 
 # grid
-cell_width = 20
+cell_width = 70
 cols = win_width//cell_width
 rows = win_height//cell_width
 cell_border_width = 1
@@ -35,6 +35,38 @@ for j in range(rows):
     all_cells.append(col)
 
 
+# Current Cell
+'''
+active cell -> purple color
+visited cell -> OrangeRed
+unvisited cell -> black
+'''
+current_cell = all_cells[1][4]
+current_cell.visited = True
+current_cell.fill_color = colors.Purple
+next_cell = None
+
+def FindNextCell() -> Cell:
+    global current_cell, next_cell
+    i = current_cell.i//cell_width # i -> cols
+    j = current_cell.j//cell_width # j -> rows
+
+    # get all neighbors of current cell
+    Neighbors =  current_cell.neighbors(all_cells, j, i)
+
+    # choose random neighbor        
+    if len(Neighbors):
+        random_neighbor = random.choice(Neighbors)
+        next_cell = random_neighbor
+    
+        # modifying cell status
+        current_cell.visited = True
+        current_cell.fill_color = colors.OrangeRed
+
+        current_cell = next_cell
+        current_cell.fill_color = colors.Purple
+
+
 run = True
 while run:
     # win.fill(colors.Blue)
@@ -48,5 +80,7 @@ while run:
             all_cells[i][j].show(win)
             # if all_cells[i][j].fill_color == colors.Purple:
                 # print(i,j)
+    pygame.time.wait(300)
+    FindNextCell()
 
     pygame.display.update()
