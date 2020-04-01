@@ -47,6 +47,10 @@ active cell -> purple color
 visited cell -> OrangeRed
 unvisited cell -> black
 '''
+CurrentCellColor = colors.Purple
+NextCellColor = colors.FireBrick
+HomeCellColor = colors.LimeGreen
+FinalCellColor = colors.Red
 
 startX = random.randint(0, cols-1)
 startY = random.randint(0, rows-1)
@@ -59,16 +63,19 @@ next_cell = None
 
 def FindNextCell() -> Cell:
     global stack, current_cell, max_stack_len, startX, startY, final_cell
+    global NextCellColor, CurrentCellColor, HomeCellColor, FinalCellColor
 
     # current_cell from prev cycle, making it orange
-    current_cell.fill_color = colors.OrangeRed
+    current_cell.fill_color = CurrentCellColor
 
     if len(stack)>max_stack_len:
         max_stack_len = len(stack)
         final_cell = current_cell
     if len(stack)>0:
         current_cell = stack.pop()
-        current_cell.fill_color = colors.Purple
+
+        # Act as next cell
+        current_cell.fill_color = NextCellColor
 
         row = current_cell.row_index # i -> cols
         col = current_cell.col_index # j -> rows
@@ -86,16 +93,16 @@ def FindNextCell() -> Cell:
             current_cell.remove_wall_between(next_cell)
 
             #modifying cell status
-            current_cell.fill_color = colors.OrangeRed
-            next_cell.fill_color = colors.Purple
+            current_cell.fill_color = CurrentCellColor
+            next_cell.fill_color = NextCellColor
 
             next_cell.visited = True
             stack.append(next_cell)
     
     elif len(stack)==0:
         home_cell = all_cells[startX][startY]
-        home_cell.fill_color = colors.LimeGreen
-        final_cell.fill_color = colors.Red
+        home_cell.fill_color = HomeCellColor
+        final_cell.fill_color = FinalCellColor
     
 
 
