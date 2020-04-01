@@ -1,12 +1,12 @@
 import pygame 
 from Cell import Cell
+import random
 import colors
 pygame.init()
 
-
 # window variables, +1 for bottom and right border
-win_width=500+1     
-win_height= 500+1
+win_width   = 500+1     
+win_height  = 500+1
 win = pygame.display.set_mode((win_width, win_height))
 
 
@@ -20,11 +20,17 @@ all_cells = [] # [cols][rows]
 count = 1
 
 # creating grid
-for i in range(cols):
+'''
+grid[row][col]
+ 
+j->row
+i->col
+'''
+for j in range(rows):
     col= []
     count+=1
-    for j in range(rows):
-        cell = Cell(i*cell_width, j*cell_width, cell_width, colors.Blue, colors.Red)
+    for i in range(cols):
+        cell = Cell(i*cell_width, j*cell_width, cell_width, colors.Black, colors.White)
         col.append(cell)
     all_cells.append(col)
 
@@ -35,9 +41,12 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
-        
-    for i in range(rows):
-        for j  in range(cols):
-            all_cells[j][i].show(win)
+    
+    # Printing Grid
+    for j in range(rows):
+        for i  in range(cols):
+            all_cells[i][j].show(win)
+            # if all_cells[i][j].fill_color == colors.Purple:
+                # print(i,j)
 
     pygame.display.update()
